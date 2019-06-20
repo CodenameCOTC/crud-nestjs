@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import {Contact} from './contact.entity'
 import {ContactsService} from './contacts.service'
-import { identity } from 'rxjs';
 
 @Controller('contacts')
 export class ContactsController {
