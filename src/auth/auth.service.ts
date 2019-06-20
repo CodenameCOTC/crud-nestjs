@@ -1,9 +1,10 @@
-import { Injectable, UnauthorizedException, HttpStatus, HttpException } from '@nestjs/common';
+import { Injectable,  HttpStatus, HttpException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcryptjs';
 import { UserService } from '../user/user.service'
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { SignInDTO } from './dto/signin.dto'
+import {LoginSuccess} from './interfaces/login-success.interface'
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) { }
 
-    async signIn(userData: SignInDTO): Promise<string> {
+    async signIn(userData: SignInDTO): Promise<LoginSuccess> {
         const user = await this.userService.findOneByEmail(userData.email);
 
         if (!user) {
@@ -28,8 +29,14 @@ export class AuthService {
             id: user.id,
             email: user.email,
         }
+        
+        const token = this.jwtService.sign(jwtPayload)
+        const response: LoginSuccess = {
+            status: 'Success',
+            token
+        }
 
-        return this.jwtService.sign(jwtPayload)
+        return response
     }
     
         
