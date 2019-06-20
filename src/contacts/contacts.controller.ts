@@ -1,29 +1,43 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
-import {Contact} from './contact.entity'
-import {ContactsService} from './contacts.service'
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { Contact } from './contact.entity'
+import { ContactsService } from './contacts.service'
+import { ApiUseTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiUseTags('Contact')
 @Controller('contacts')
 export class ContactsController {
-    constructor(private ContactsService: ContactsService) {}
+    constructor(private ContactsService: ContactsService) { }
 
     @Get()
+    @UseGuards(AuthGuard())
+    @ApiOperation({ title: 'Get all current user contact' })
+    @ApiBearerAuth()
     index(): Promise<Contact[]> {
         return this.ContactsService.findAll();
     }
 
     @Post('create')
+    @UseGuards(AuthGuard())
+    @ApiOperation({ title: 'Create contact' })
+    @ApiBearerAuth()
     async create(@Body() contactData: Contact): Promise<any> {
         return this.ContactsService.create(contactData);
     }
 
     @Put(':id/update')
+    @UseGuards(AuthGuard())
+    @ApiOperation({ title: 'Update contact' })
+    @ApiBearerAuth()
     async update(@Param('id') id, @Body() contactData: Contact): Promise<any> {
         contactData.id = Number(id);
-        console.log('Update #' + contactData.id);
         return this.ContactsService.update(contactData);
     }
 
     @Delete(':id/delete')
+    @UseGuards(AuthGuard())
+    @ApiOperation({ title: 'Delete contact by id' })
+    @ApiBearerAuth()
     async delete(@Param('id') id): Promise<any> {
         return this.ContactsService.delete(id)
     }
