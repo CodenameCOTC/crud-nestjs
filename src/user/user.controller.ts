@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards } from '@nestjs/common';
+import {AuthGuard} from '@nestjs/passport'
 import { DeleteResult } from 'typeorm'
 import { User } from './user.entity'
 import { UserService } from './user.service'
@@ -10,6 +11,7 @@ export class UserController {
     ) { }
 
     @Get()
+    @UseGuards(AuthGuard())
     findAll(): Promise<User[]> {
         return this.UserService.findAll()
     }
