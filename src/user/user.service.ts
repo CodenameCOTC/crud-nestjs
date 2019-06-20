@@ -26,4 +26,8 @@ export class UserService {
     async delete(id: number): Promise<DeleteResult> {
         return this.userRepository.delete(id);
     }
+
+    async findOneByEmail(email: string): Promise<User> {
+        return this.userRepository.findOne({ email })
+    }
 }
