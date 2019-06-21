@@ -33,6 +33,15 @@ export class ContactsService {
     }
 
     async delete(id): Promise<DeleteResult> {
-        return await this.contactRepository.delete(id);
+        try {
+
+            return await this.contactRepository.delete(id);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async findOneById(contactId: number) {
+        return this.contactRepository.findOne(contactId, { relations: ['createdBy'] })
     }
 }

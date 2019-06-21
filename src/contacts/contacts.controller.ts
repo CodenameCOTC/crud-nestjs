@@ -1,8 +1,9 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiUseTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { Contact } from './contact.entity'
 import { ContactsService } from './contacts.service'
-import { ApiUseTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { ContactGuard } from './contact.guard'
 import { Request } from './interface/request.interface'
 
 @ApiUseTags('Contact')
@@ -18,7 +19,7 @@ export class ContactsController {
         return this.ContactsService.findAll(request);
     }
 
-    @Post('create')
+    @Post()
     @UseGuards(AuthGuard())
     @ApiOperation({ title: 'Create contact' })
     @ApiBearerAuth()
@@ -26,7 +27,7 @@ export class ContactsController {
         return this.ContactsService.create(request.user, contactData);
     }
 
-    @Put(':id/update')
+    @Put(':id')
     @UseGuards(AuthGuard())
     @ApiOperation({ title: 'Update contact' })
     @ApiBearerAuth()
@@ -35,8 +36,8 @@ export class ContactsController {
         return this.ContactsService.update(contactData);
     }
 
-    @Delete(':id/delete')
-    @UseGuards(AuthGuard())
+    @Delete(':id')
+    @UseGuards(AuthGuard(), ContactGuard)
     @ApiOperation({ title: 'Delete contact by id' })
     @ApiBearerAuth()
     async delete(@Param('id') id): Promise<any> {
