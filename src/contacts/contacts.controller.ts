@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Contact } from './contact.entity'
 import { ContactsService } from './contacts.service'
 import { ApiUseTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { Request } from './interface/request.interface'
 
 @ApiUseTags('Contact')
 @Controller('contacts')
@@ -13,16 +14,16 @@ export class ContactsController {
     @UseGuards(AuthGuard())
     @ApiOperation({ title: 'Get all current user contact' })
     @ApiBearerAuth()
-    index(): Promise<Contact[]> {
-        return this.ContactsService.findAll();
+    index(@Req() request: Request): Promise<Contact[]> {
+        return this.ContactsService.findAll(request);
     }
 
     @Post('create')
     @UseGuards(AuthGuard())
     @ApiOperation({ title: 'Create contact' })
     @ApiBearerAuth()
-    async create(@Body() contactData: Contact): Promise<any> {
-        return this.ContactsService.create(contactData);
+    async create(@Req() request: Request, @Body() contactData: Contact): Promise<any> {
+        return this.ContactsService.create(request.user, contactData);
     }
 
     @Put(':id/update')

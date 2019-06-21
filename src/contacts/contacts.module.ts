@@ -7,7 +7,7 @@ import { Contact } from './contact.entity'
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule.register({ defaultStrategy: 'jwt', property: 'user' }),
     TypeOrmModule.forFeature([Contact])
   ],
   providers: [ContactsService],

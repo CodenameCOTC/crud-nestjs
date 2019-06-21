@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, ManyToOne, JoinColumn } from 'typeorm'
 import { ApiModelProperty } from '@nestjs/swagger';
+import { User } from '../user/user.entity'
 
 @Entity()
 export class Contact {
@@ -28,5 +29,8 @@ export class Contact {
 
     @ApiModelProperty()
     @Column()
-    country: String
+    country: string
+
+    @ManyToOne(() => User, user => user.contacts)
+    createdBy: User
 }

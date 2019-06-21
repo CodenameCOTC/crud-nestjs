@@ -1,5 +1,6 @@
-import {Entity, Column, PrimaryGeneratedColumn} from 'typeorm'
-import {ApiModelProperty} from '@nestjs/swagger'
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm'
+import { ApiModelProperty } from '@nestjs/swagger'
+import { Contact } from '../contacts/contact.entity';
 
 @Entity()
 export class User {
@@ -11,6 +12,9 @@ export class User {
     email: string;
 
     @ApiModelProperty()
-    @Column()
+    @Column({select: false})
     password: string;
+
+    @OneToMany(() => Contact, contacts => contacts.createdBy)
+    contacts: Contact[]
 }

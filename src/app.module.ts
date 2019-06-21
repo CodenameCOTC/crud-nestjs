@@ -12,7 +12,7 @@ import { AuthModule } from './auth/auth.module';
       type: 'sqlite',
       database: 'db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true
+      synchronize: true,
     }),
     UserModule,
     AuthModule

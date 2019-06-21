@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import {Repository, DeleteResult, UpdateResult} from 'typeorm';
-import {InjectRepository} from '@nestjs/typeorm'
-import {Contact} from './contact.entity';
+import { Repository, DeleteResult, UpdateResult } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm'
+import { Contact } from './contact.entity';
+import { User } from '../user/user.entity'
+import { Request } from './interface/request.interface'
 
 @Injectable()
 export class ContactsService {
@@ -10,11 +12,19 @@ export class ContactsService {
         private contactRepository: Repository<Contact>
     ) { }
 
-    async findAll(): Promise<Contact[]> {
-        return await this.contactRepository.find();
+    async findAll(request: Request): Promise<Contact[]> {
+        return await this.contactRepository
+            .find({
+                where: { createdBy: request.user.id },
+                relations: ['createdBy'],
+                order: {
+                    firstName: 'ASC'
+                }
+            })
     }
 
-    async create(contact: Contact): Promise<Contact> {
+    async create(user: User, contact: Contact): Promise<Contact> {
+        contact.createdBy = user;
         return await this.contactRepository.save(contact);
     }
 

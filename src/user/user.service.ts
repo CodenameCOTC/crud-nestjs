@@ -13,7 +13,7 @@ export class UserService {
     ) { }
 
     async findAll(): Promise<User[]> {
-        return this.userRepository.find({ select: ["email", 'id'] });
+        return this.userRepository.find({ select: ["email", 'id'], relations: ['contacts'] });
     }
 
     async create(user: User): Promise<User> {
@@ -28,6 +28,6 @@ export class UserService {
     }
 
     async findOneByEmail(email: string): Promise<User> {
-        return this.userRepository.findOne({ email })
+        return this.userRepository.findOne({ email }, {select: ['email', 'id', 'password']})
     }
 }
