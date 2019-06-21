@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Req, UsePipes } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiUseTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { Contact } from './contact.entity'
 import { ContactsService } from './contacts.service'
 import { ContactGuard } from './contact.guard'
 import { Request } from './interface/request.interface'
+import { ValidateContactPipe } from './pipe/validate-contact-dto'
 
 @ApiUseTags('Contact')
 @Controller('contacts')
@@ -21,6 +22,7 @@ export class ContactsController {
 
     @Post()
     @UseGuards(AuthGuard())
+    @UsePipes(new ValidateContactPipe())
     @ApiOperation({ title: 'Create contact' })
     @ApiBearerAuth()
     async create(@Req() request: Request, @Body() contactData: Contact): Promise<any> {
@@ -29,6 +31,7 @@ export class ContactsController {
 
     @Put(':id')
     @UseGuards(AuthGuard())
+    @UsePipes(new ValidateContactPipe())
     @ApiOperation({ title: 'Update contact' })
     @ApiBearerAuth()
     async update(@Param('id') id, @Body() contactData: Contact): Promise<any> {
