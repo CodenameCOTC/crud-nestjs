@@ -1,8 +1,9 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, UsePipes } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { SignInDTO } from './dto/signin.dto';
-import {LoginSuccess} from './interfaces/login-success.interface'
+import { LoginSuccess } from './interfaces/login-success.interface'
+import { ValidateUserPipe } from '../user/pipe/validate-user.pipe'
 
 
 @ApiUseTags('Auth')
@@ -13,6 +14,7 @@ export class AuthController {
     ) { }
 
     @Post('/login')
+    @UsePipes(new ValidateUserPipe())
     signIn(@Body() userData: SignInDTO): Promise<LoginSuccess> {
         return this.AuthService.signIn(userData);
     }

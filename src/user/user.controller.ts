@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, UsePipes } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport'
 import { ApiUseTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { DeleteResult } from 'typeorm'
 import { User } from './user.entity'
 import { UserService } from './user.service'
+import { ValidateUserPipe } from './pipe/validate-user.pipe';
 
 @ApiUseTags('User')
 @Controller('user')
@@ -22,6 +23,7 @@ export class UserController {
 
     @ApiOperation({ title: 'Registering user' })
     @Post()
+    @UsePipes(new ValidateUserPipe())
     create(@Body() userData: User): Promise<User> {
         return this.UserService.create(userData);
     }
