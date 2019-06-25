@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Req, UsePipes } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Req, UsePipes, Query } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiUseTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { Contact } from './contact.entity'
@@ -16,8 +16,8 @@ export class ContactsController {
     @UseGuards(AuthGuard())
     @ApiOperation({ title: 'Get all current user contact' })
     @ApiBearerAuth()
-    index(@Req() request: Request): Promise<Contact[]> {
-        return this.ContactsService.findAll(request);
+    index(@Req() request: Request, @Query() query: { page: number, limit: number }): Promise<Contact[]> {
+        return this.ContactsService.findAll(request, query.limit, query.page);
     }
 
     @Post()
@@ -46,4 +46,5 @@ export class ContactsController {
     async delete(@Param('id') id): Promise<any> {
         return this.ContactsService.delete(id)
     }
+
 }

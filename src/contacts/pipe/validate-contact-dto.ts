@@ -70,17 +70,11 @@ export class ValidateContactPipe implements PipeTransform {
       errors.phone = 'Phone cannot be empty'
     }
 
-    if (Validator.isLength(city, { min: 2, max: 50 })) {
-      errors.city = 'City length must be between 2 and 50'
-    }
 
     if (Validator.isEmpty(city, { ignore_whitespace: true })) {
       errors.city = 'City cannot be empty'
     }
 
-    if (Validator.isLength(country, { min: 2, max: 50 })) {
-      errors.country = 'Country length must be between 2 and 50'
-    }
 
     if (Validator.isEmpty(country, { ignore_whitespace: true })) {
       errors.country = 'Country cannot be empty'

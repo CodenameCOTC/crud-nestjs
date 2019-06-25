@@ -12,14 +12,16 @@ export class ContactsService {
         private contactRepository: Repository<Contact>
     ) { }
 
-    async findAll(request: Request): Promise<Contact[]> {
+    async findAll(request: Request, limit: number = 10, page: number = 1): Promise<Contact[]> {
         return await this.contactRepository
             .find({
                 where: { createdBy: request.user.id },
                 relations: ['createdBy'],
                 order: {
                     firstName: 'ASC'
-                }
+                },
+                skip: limit * (page - 1),
+                take: limit
             })
     }
 
@@ -44,4 +46,6 @@ export class ContactsService {
     async findOneById(contactId: number) {
         return this.contactRepository.findOne(contactId, { relations: ['createdBy'] })
     }
+
+
 }
